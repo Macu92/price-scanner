@@ -1,7 +1,6 @@
 package pl.com.crypto.pricescanner.pricescanner.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.knowm.xchange.binance.dto.marketdata.KlineInterval;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.springframework.stereotype.Service;
 import org.ta4j.core.Bar;
