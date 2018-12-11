@@ -5,6 +5,7 @@ import org.ta4j.core.Bar;
 import org.ta4j.core.BaseBar;
 import org.ta4j.core.Decimal;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.ZoneId;
 
@@ -13,12 +14,15 @@ public class BarMapper {
     public static Bar map(BinanceKline binanceKline) {
         return new BaseBar(DurationMapper.map(binanceKline.getInterval()),
                 new Timestamp(binanceKline.getCloseTime()).toInstant().atZone(ZoneId.systemDefault()),
-                Decimal.valueOf(binanceKline.getOpenPrice().doubleValue()),
-                Decimal.valueOf(binanceKline.getHighPrice().doubleValue()),
-                Decimal.valueOf(binanceKline.getLowPrice().doubleValue()),
-                Decimal.valueOf(binanceKline.getClosePrice().doubleValue()),
-                Decimal.valueOf(binanceKline.getVolume().doubleValue())
-        );
+                toDecimal(binanceKline.getOpenPrice()),
+                toDecimal(binanceKline.getHighPrice()),
+                toDecimal(binanceKline.getLowPrice()),
+                toDecimal(binanceKline.getClosePrice()),
+                toDecimal(binanceKline.getVolume()));
+    }
+
+    private static Decimal toDecimal(BigDecimal bigDecimal) {
+        return Decimal.valueOf(bigDecimal.doubleValue());
     }
 
 }

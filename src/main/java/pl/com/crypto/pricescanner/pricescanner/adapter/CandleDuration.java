@@ -1,10 +1,13 @@
 package pl.com.crypto.pricescanner.pricescanner.adapter;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.Duration;
 
 @Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum CandleDuration {
     m1("1m", Duration.ofMinutes(1)),
     m3("3m", Duration.ofMinutes(3)),
@@ -24,10 +27,5 @@ public enum CandleDuration {
 
     private final String code;
     private final Duration duration;
-
-    private CandleDuration(String code, Duration duration) {
-        this.code = code;
-        this.duration = duration;
-    }
 
 }
