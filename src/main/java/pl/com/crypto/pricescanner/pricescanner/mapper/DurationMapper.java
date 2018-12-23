@@ -5,7 +5,6 @@ import pl.com.crypto.pricescanner.pricescanner.error.UnsupportedCandleIntervalEx
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.Optional;
 
 public class DurationMapper {
 
@@ -14,11 +13,10 @@ public class DurationMapper {
     }
 
     public static KlineInterval map(Duration duration) {
-        KlineInterval klineInterval = Arrays.stream(
+        return Arrays.stream(
                 KlineInterval.values())
                 .filter(interval -> interval.getMillis().equals(duration.toMillis()))
                 .findFirst()
                 .orElseThrow(() -> new UnsupportedCandleIntervalException(duration.toString()));
-        return klineInterval;
     }
 }

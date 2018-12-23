@@ -1,8 +1,7 @@
 package pl.com.crypto.pricescanner.pricescanner.adapter.binance;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.knowm.xchange.ExchangeFactory;
-import org.knowm.xchange.binance.BinanceExchange;
 import org.knowm.xchange.binance.service.BinanceMarketDataService;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.springframework.stereotype.Component;
@@ -16,15 +15,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@AllArgsConstructor
 @Slf4j
 public class BinanceMarketDataAdapter {
 
     private final BinanceMarketDataService binanceMarketDataService;
-
-    public BinanceMarketDataAdapter() {
-        this.binanceMarketDataService = new BinanceMarketDataService(
-                ExchangeFactory.INSTANCE.createExchange(BinanceExchange.class.getName()));
-    }
 
     public List<Bar> getHistory(CurrencyPair currencyPair, Duration duration) throws IOException {
         return binanceMarketDataService.klines(currencyPair, DurationMapper.map(duration)).stream()

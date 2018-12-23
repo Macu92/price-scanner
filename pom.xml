@@ -23,6 +23,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>11</java.version>
         <xchange.version>4.3.13</xchange.version>
+		<xchange.stream.version>4.3.11</xchange.stream.version>
 	</properties>
 
 	<dependencies>
@@ -52,6 +53,21 @@
 			<groupId>org.knowm.xchange</groupId>
 			<artifactId>xchange-binance</artifactId>
 			<version>${xchange.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>info.bitrich.xchange-stream</groupId>
+			<artifactId>xchange-stream-core</artifactId>
+			<version>${xchange.stream.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>info.bitrich.xchange-stream</groupId>
+			<artifactId>xchange-binance</artifactId>
+			<version>${xchange.stream.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>info.bitrich.xchange-stream</groupId>
+			<artifactId>xchange-bitstamp</artifactId>
+			<version>${xchange.stream.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.ta4j</groupId>
