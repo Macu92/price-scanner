@@ -24,7 +24,7 @@ hs_err_pid*\
 
 Intelij
 .idea/*
-target
+target/*
 
 MAVEN
 .mvn
