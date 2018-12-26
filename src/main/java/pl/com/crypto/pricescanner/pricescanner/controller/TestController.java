@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.ta4j.core.Bar;
 import org.ta4j.core.BaseBar;
 import pl.com.crypto.pricescanner.pricescanner.adapter.CandleDuration;
-import pl.com.crypto.pricescanner.pricescanner.service.BarService;
+import pl.com.crypto.pricescanner.pricescanner.model.Market;
+import pl.com.crypto.pricescanner.pricescanner.service.CurrencyPairService;
 import pl.com.crypto.pricescanner.pricescanner.service.MarketService;
 
 import java.io.IOException;
@@ -22,17 +23,31 @@ import java.util.List;
 @RequestMapping("/test-api")
 public class TestController {
 
-    private final BarService barService;
+    private final CurrencyPairService currencyPairService;
+    private final MarketService marketService;
 
     @GetMapping(value = "/start")
-    HttpStatus startPriceScanning() {
+    public HttpStatus startPriceScanning() {
         log.info("STARTED");
         try {
-            List<Bar> bars = barService.getHistory(CurrencyPair.BTC_USDT, CandleDuration.m1.getDuration());
-            bars.forEach(bar -> System.out.println(((BaseBar)bar).getBeginTime().toString() +" "+bar.toString()));
+            List<Bar> bars = currencyPairService.getHistory(CurrencyPair.BTC_USDT, CandleDuration.m1.getDuration());
+            bars.forEach(bar -> System.out.println(((BaseBar) bar).getBeginTime().toString() + " " + bar.toString()));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return HttpStatus.OK;
+    }
+
+    @GetMapping(value = "/test")
+    public HttpStatus test() {
+        marketService.addMarket(CurrencyPair.BTC_USDT, CandleDuration.m1.getDuration());
+        marketService.addMarket(CurrencyPair.ETH_BTC, CandleDuration.m5.getDuration());
+        return HttpStatus.OK;
+    }
+
+    @GetMapping(value = "/stop")
+    public HttpStatus stop() {
+        marketService.disconnectAllMarkets();
         return HttpStatus.OK;
     }
 }

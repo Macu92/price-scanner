@@ -16,8 +16,4 @@ public class BinanceConfiguration {
         return (BinanceMarketDataService) streamingExchangeAdapter.getMarketDataService();
     }
 
-//    @Bean
-//    public BinanceStreamingMarketDataService getBinanceStreamingMarketDataService() {
-//        return (BinanceStreamingMarketDataService) streamingExchangeAdapter.getStreamingMarketDataService();
-//    }
 }

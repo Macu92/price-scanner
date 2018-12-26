@@ -7,38 +7,41 @@ import info.bitrich.xchangestream.core.StreamingExchangeFactory;
 import info.bitrich.xchangestream.core.StreamingMarketDataService;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.service.marketdata.MarketDataService;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
+@Scope("prototype")
 public class BinanceStreamingExchangeAdapter {
 
     private final StreamingExchange exchange;
+    private ProductSubscription productSubscription;
 
     public BinanceStreamingExchangeAdapter() {
         exchange = StreamingExchangeFactory.INSTANCE.createExchange(BinanceStreamingExchange.class.getName());
     }
 
-    public void connect(ProductSubscription productSubscription){
-       exchange.connect(productSubscription).blockingAwait();
+    public void connect(ProductSubscription productSubscription) {
+        exchange.connect(productSubscription).blockingAwait();
     }
 
-    public void connectTickers(CurrencyPair currencyPair){
+    public void connectTickers(CurrencyPair currencyPair) {
         connect(ProductSubscription.create().addTicker(currencyPair).build());
     }
 
-    public void disconnect(){
+    public void disconnect() {
         exchange.disconnect();
     }
 
-    public boolean isAlive(){
+    public boolean isAlive() {
         return exchange.isAlive();
     }
 
-    public StreamingMarketDataService getStreamingMarketDataService(){
+    public StreamingMarketDataService getStreamingMarketDataService() {
         return exchange.getStreamingMarketDataService();
     }
 
-    public MarketDataService getMarketDataService(){
+    public MarketDataService getMarketDataService() {
         return exchange.getMarketDataService();
     }
 }

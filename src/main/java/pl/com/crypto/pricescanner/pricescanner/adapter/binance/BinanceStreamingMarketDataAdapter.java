@@ -5,17 +5,19 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.marketdata.Ticker;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
+@Scope("prototype")
 @AllArgsConstructor
 @Slf4j
 public class BinanceStreamingMarketDataAdapter {
 
     private final BinanceStreamingExchangeAdapter binanceStreamingExchangeAdapter;
 
-    public Observable<Ticker> getTicker(CurrencyPair currencyPair){
-        if(!binanceStreamingExchangeAdapter.isAlive()) {
+    public Observable<Ticker> getTicker(CurrencyPair currencyPair) {
+        if (!binanceStreamingExchangeAdapter.isAlive()) {
             binanceStreamingExchangeAdapter.connectTickers(currencyPair);
         }
         return binanceStreamingExchangeAdapter.getStreamingMarketDataService().getTicker(currencyPair);
