@@ -6,6 +6,7 @@ import org.knowm.xchange.binance.service.BinanceMarketDataService;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.springframework.stereotype.Component;
 import org.ta4j.core.Bar;
+import pl.com.crypto.pricescanner.pricescanner.adapter.CandleDuration;
 import pl.com.crypto.pricescanner.pricescanner.mapper.BarMapper;
 import pl.com.crypto.pricescanner.pricescanner.mapper.DurationMapper;
 
@@ -21,7 +22,7 @@ public class BinanceMarketDataAdapter {
 
     private final BinanceMarketDataService binanceMarketDataService;
 
-    public List<Bar> getHistory(CurrencyPair currencyPair, Duration duration) throws IOException {
+    public List<Bar> getHistory(CurrencyPair currencyPair, CandleDuration duration) throws IOException {
         return binanceMarketDataService.klines(currencyPair, DurationMapper.map(duration)).stream()
                 .map(BarMapper::map).collect(Collectors.toList());
     }
