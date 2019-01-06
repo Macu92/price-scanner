@@ -25,9 +25,9 @@ public class TestController {
         log.info("STARTED");
         currencyPairService.streamTicker(CurrencyPair.BTC_USDT);
         marketService.createMarket(CurrencyPair.BTC_USDT, CandleDuration.m1);
-        marketService.createMarket(CurrencyPair.BTC_USDT, CandleDuration.m5);
-        currencyPairService.streamTicker(CurrencyPair.ETH_BTC);
-        marketService.createMarket(CurrencyPair.ETH_BTC, CandleDuration.m5);
+//        marketService.createMarket(CurrencyPair.BTC_USDT, CandleDuration.m5);
+//        currencyPairService.streamTicker(CurrencyPair.ETH_BTC);
+//        marketService.createMarket(CurrencyPair.ETH_BTC, CandleDuration.m5);
         return HttpStatus.OK;
     }
 

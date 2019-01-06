@@ -20,4 +20,5 @@ public class Market {
     private CurrencyPair currencyPair;
     private CandleDuration duration;
 
+    private Bar actualBar;
 }

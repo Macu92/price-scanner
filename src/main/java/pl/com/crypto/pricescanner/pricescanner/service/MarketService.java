@@ -3,6 +3,7 @@ package pl.com.crypto.pricescanner.pricescanner.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.knowm.xchange.currency.CurrencyPair;
+import org.knowm.xchange.dto.marketdata.Ticker;
 import org.springframework.stereotype.Service;
 import pl.com.crypto.pricescanner.pricescanner.adapter.CandleDuration;
 import pl.com.crypto.pricescanner.pricescanner.error.CurrencyPairNotStreamed;
@@ -20,6 +21,7 @@ public class MarketService {
 
     private final CurrencyPairService currencyPairService;
     private final MarketDataService marketDataService;
+    private final BarService barService;
     private List<Market> markets;
 
     public void createMarket(CurrencyPair currencyPair, CandleDuration duration) {
@@ -39,7 +41,17 @@ public class MarketService {
     }
 
     private MarketObserver createMarketObserver(Market market) {
-        return new MarketObserver(market);
+        return new MarketObserver(market) {
+            @Override
+            public void onNext(Object ticker) {
+                log.info(String.format("Duration %s got Ticker: %s", market.getDuration(), ticker));
+                barService.updateActualBar((Ticker) ticker, market);
+                log.info("LAST TEN TICKERS");
+                for (int i = market.getBars().size(); market.getBars().size() - 10 < i; i--) {
+                    log.info(market.getBars().get(i - 1).getBeginTime() + " " + market.getBars().get(i - 1).toString());
+                }
+            }
+        };
     }
 
     public void disconnectAllMarkets() {
