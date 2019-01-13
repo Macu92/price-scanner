@@ -1,4 +1,4 @@
-package pl.com.crypto.pricescanner.pricescanner.service;
+package pl.com.crypto.pricescanner.pricescanner.service.binance;
 
 import io.reactivex.Observer;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +7,7 @@ import org.knowm.xchange.currency.CurrencyPair;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import pl.com.crypto.pricescanner.pricescanner.adapter.binance.BinanceStreamingMarketDataAdapter;
+import pl.com.crypto.pricescanner.pricescanner.service.StreamingMarketDataService;
 
 import java.util.LinkedList;
 import java.util.List;

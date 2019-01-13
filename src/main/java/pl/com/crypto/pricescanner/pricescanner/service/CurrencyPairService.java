@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import pl.com.crypto.pricescanner.pricescanner.error.CurrencyPairNotStreamed;
 import pl.com.crypto.pricescanner.pricescanner.model.MarketObserver;
+import pl.com.crypto.pricescanner.pricescanner.service.binance.BinanceStreamingMarketDataService;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;

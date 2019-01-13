@@ -4,7 +4,8 @@ import org.knowm.xchange.dto.marketdata.Ticker;
 import org.springframework.stereotype.Component;
 import org.ta4j.core.Bar;
 import org.ta4j.core.BaseBar;
-import org.ta4j.core.Decimal;
+import org.ta4j.core.num.DoubleNum;
+import org.ta4j.core.num.Num;
 import pl.com.crypto.pricescanner.pricescanner.adapter.CandleDuration;
 import pl.com.crypto.pricescanner.pricescanner.model.Market;
 
@@ -23,22 +24,25 @@ public class BarService {
             market.setActualBar(actualBar);
         } else if (actualBar.getEndTime().toInstant().isBefore(Instant.now()) && actualBar != null) {
             actualBar = createNewActualBar(
-                    Decimal.valueOf(ticker.getLast().doubleValue()),
+                    DoubleNum.valueOf(ticker.getLast().longValue()),
                     market.getDuration(),
                     actualBar);
             market.setActualBar(actualBar);
             bars.add(actualBar);
         }
-        actualBar.addTrade(ticker.getVolume().doubleValue(), ticker.getLast().doubleValue());
+        actualBar.addTrade(
+                DoubleNum.valueOf(ticker.getVolume().longValue()),
+                DoubleNum.valueOf(ticker.getLast().longValue()));
     }
 
-    private Bar createNewActualBar(Decimal lastTradeValue, CandleDuration candleDuration, Bar actualBar) {
+    private Bar createNewActualBar(Num lastTradeValue, CandleDuration candleDuration, Bar actualBar) {
         return new BaseBar(candleDuration.getDuration(),
                 actualBar.getEndTime().plus(candleDuration.getDuration()),
                 lastTradeValue,
                 lastTradeValue,
                 lastTradeValue,
                 lastTradeValue,
-                Decimal.ZERO);
+                DoubleNum.valueOf(Long.valueOf(0)),
+                DoubleNum.valueOf(Long.valueOf(0)));
     }
 }

@@ -72,7 +72,7 @@
 		<dependency>
 			<groupId>org.ta4j</groupId>
 			<artifactId>ta4j-core</artifactId>
-			<version>0.11</version>
+			<version>0.12</version>
 		</dependency>
 
 		<dependency>
