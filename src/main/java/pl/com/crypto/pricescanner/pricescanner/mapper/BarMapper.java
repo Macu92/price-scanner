@@ -16,12 +16,12 @@ public class BarMapper {
     public static Bar map(BinanceKline binanceKline) {
         return new BaseBar(DurationMapper.map(binanceKline.getInterval()),
                 new Timestamp(binanceKline.getCloseTime() + 1).toInstant().atZone(ZoneId.systemDefault()),
-                toDoubleNum(binanceKline.getOpenPrice()),
-                toDoubleNum(binanceKline.getHighPrice()),
-                toDoubleNum(binanceKline.getLowPrice()),
-                toDoubleNum(binanceKline.getClosePrice()),
-                toDoubleNum(binanceKline.getVolume()),
-                toDoubleNum(BigDecimal.valueOf(binanceKline.getNumberOfTrades())));
+                toPrecisionNum(binanceKline.getOpenPrice()),
+                toPrecisionNum(binanceKline.getHighPrice()),
+                toPrecisionNum(binanceKline.getLowPrice()),
+                toPrecisionNum(binanceKline.getClosePrice()),
+                toPrecisionNum(binanceKline.getVolume()),
+                toPrecisionNum(BigDecimal.valueOf(binanceKline.getNumberOfTrades())));
     }
 
     private static Num toDoubleNum(BigDecimal bigDecimal) {

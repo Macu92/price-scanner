@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.marketdata.Ticker;
 import org.springframework.stereotype.Service;
+import org.ta4j.core.BaseTimeSeries;
 import pl.com.crypto.pricescanner.pricescanner.adapter.CandleDuration;
 import pl.com.crypto.pricescanner.pricescanner.error.CurrencyPairNotStreamed;
 import pl.com.crypto.pricescanner.pricescanner.model.Market;
@@ -21,16 +22,17 @@ public class MarketService {
 
     private final CurrencyPairService currencyPairService;
     private final MarketDataService marketDataService;
-    private final BarService barService;
+    private final TimeSeriesService timeSeriesService;
     private List<Market> markets;
 
-    public void createMarket(CurrencyPair currencyPair, CandleDuration duration) {
+    public Market createMarket(CurrencyPair currencyPair, CandleDuration duration) {
         if (markets == null) {
             markets = new LinkedList<>();
         }
 
+        Market market = null;
         try {
-            Market market = buildMarket(currencyPair, duration);
+            market = buildMarket(currencyPair, duration);
             markets.add(market);
             currencyPairService.observeCurrencyPair(createMarketObserver(market));
         } catch (IOException e) {
@@ -38,6 +40,8 @@ public class MarketService {
         } catch (CurrencyPairNotStreamed currencyPairNotStreamed) {
             log.error(currencyPairNotStreamed.getMessage(), currencyPairNotStreamed);
         }
+
+        return market;
     }
 
     private MarketObserver createMarketObserver(Market market) {
@@ -45,11 +49,9 @@ public class MarketService {
             @Override
             public void onNext(Object ticker) {
                 log.info(String.format("Duration %s got Ticker: %s", market.getDuration(), ticker));
-                barService.updateActualBar((Ticker) ticker, market);
-                log.info("LAST TEN TICKERS");
-                for (int i = market.getBars().size(); market.getBars().size() - 10 < i; i--) {
-                    log.info(market.getBars().get(i - 1).getBeginTime() + " " + market.getBars().get(i - 1).toString());
-                }
+                timeSeriesService.updateActualBar((Ticker) ticker, market);
+                market.getIndicators().forEach((s, indicator) ->
+                        log.info(String.format("%s new value: %s", s, indicator.getValue(market.getTimeSeries().getEndIndex()))));
             }
         };
     }
@@ -62,7 +64,7 @@ public class MarketService {
         return Market.builder()
                 .duration(duration)
                 .currencyPair(currencyPair)
-                .bars(marketDataService.getHistory(currencyPair, duration))
+                .timeSeries(new BaseTimeSeries(currencyPair.toString(), marketDataService.getHistory(currencyPair, duration)))
                 .build();
     }
 }

@@ -4,35 +4,36 @@ import org.knowm.xchange.dto.marketdata.Ticker;
 import org.springframework.stereotype.Component;
 import org.ta4j.core.Bar;
 import org.ta4j.core.BaseBar;
-import org.ta4j.core.num.DoubleNum;
+import org.ta4j.core.TimeSeries;
 import org.ta4j.core.num.Num;
+import org.ta4j.core.num.PrecisionNum;
 import pl.com.crypto.pricescanner.pricescanner.adapter.CandleDuration;
 import pl.com.crypto.pricescanner.pricescanner.model.Market;
 
 import java.time.Instant;
-import java.util.List;
 
 @Component
-public class BarService {
+public class TimeSeriesService {
 
     public void updateActualBar(Ticker ticker, Market market) {
         Bar actualBar = market.getActualBar();
-        List<Bar> bars = market.getBars();
+        TimeSeries ts = market.getTimeSeries();
 
         if (actualBar == null) {
-            actualBar = bars.get(bars.size() - 1);
+            actualBar = ts.getBar(ts.getEndIndex());
             market.setActualBar(actualBar);
         } else if (actualBar.getEndTime().toInstant().isBefore(Instant.now()) && actualBar != null) {
             actualBar = createNewActualBar(
-                    DoubleNum.valueOf(ticker.getLast().longValue()),
+                    PrecisionNum.valueOf(ticker.getLast().longValue()),
                     market.getDuration(),
                     actualBar);
             market.setActualBar(actualBar);
-            bars.add(actualBar);
+            ts.addBar(actualBar);
         }
-        actualBar.addTrade(
-                DoubleNum.valueOf(ticker.getVolume().longValue()),
-                DoubleNum.valueOf(ticker.getLast().longValue()));
+
+        ts.addTrade(
+                PrecisionNum.valueOf(ticker.getVolume()),
+                PrecisionNum.valueOf(ticker.getLast()));
     }
 
     private Bar createNewActualBar(Num lastTradeValue, CandleDuration candleDuration, Bar actualBar) {
@@ -42,7 +43,7 @@ public class BarService {
                 lastTradeValue,
                 lastTradeValue,
                 lastTradeValue,
-                DoubleNum.valueOf(Long.valueOf(0)),
-                DoubleNum.valueOf(Long.valueOf(0)));
+                PrecisionNum.valueOf(Long.valueOf(0)),
+                PrecisionNum.valueOf(Long.valueOf(0)));
     }
 }
